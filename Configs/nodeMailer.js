@@ -1,0 +1,115 @@
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config({quiet:true});
+
+const transporter=nodemailer.createTransport({
+    service:"gmail",
+    auth:{
+        user:"bhargavpenta@gmail.com",
+        pass:`${process.env.NODE_MAILER_AUTH}`
+    }
+});
+console.log(process.env.NODE_MAILER_AUTH);  
+
+export const mailOptions = (username, email) => {
+  return {
+    from: `"Stock Scope" <bhargavpenta@gmail.com>`,
+    to: email,
+    subject: "🚀 Welcome to Stock Scope – Your Stock Journey Starts Now!",
+    text: `Welcome to Stock Scope!
+
+Access stock market insights without KYC.
+Start exploring stocks, IPOs, and mutual funds instantly.
+
+Happy Investing!
+Team Stock Scope`,
+    html: `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8" />
+      <title>Welcome to Stock Scope</title>
+    </head>
+    <body style="margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,Helvetica,sans-serif;">
+      
+      <table width="100%" cellpadding="0" cellspacing="0" style="padding:20px 0;">
+        <tr>
+          <td align="center">
+            
+            <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.08);">
+              
+              <tr>
+                <td style="background:#2563eb;padding:20px;text-align:center;color:white;">
+                  
+                  <div style="margin-bottom:10px;">
+                    <svg viewBox="0 0 20 20" fill="none" width="50" height="50" style="background:#1d4ed8;padding:10px;border-radius:10px;">
+                      <polyline points="2,14 7,8 11,11 18,4" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                      <circle cx="18" cy="4" r="2" fill="white" />
+                    </svg>
+                  </div>
+
+                  <h1 style="margin:0;font-size:26px;">Welcome to Stock Scope</h1>
+                  <p style="margin:5px 0 0 0;font-size:14px;opacity:0.9;">
+                    Access Stock Markets – No KYC Required
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3"
+                       alt="Stock Market"
+                       width="100%"
+                       style="display:block;">
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:30px;color:#333;">
+                  <h2 style="margin-top:0;">Hello ${username || "Investor"} 👋</h2>
+                  
+                  <p style="line-height:1.6;font-size:15px;">
+                    Thank you for joining <strong>Stock Scope</strong> — your gateway to real-time stock data, IPO updates, and mutual fund insights.
+                  </p>
+
+                  <p style="line-height:1.6;font-size:15px;">
+                    🚀 Explore stocks instantly<br/>
+                    📊 Track live market movements<br/>
+                    ⭐ Build your personal watchlist<br/>
+                    🔓 No KYC required — simple & accessible
+                  </p>
+
+                  <div style="text-align:center;margin:30px 0;">
+                    <a href="http://localhost:5173"
+                       style="background:#2563eb;color:white;text-decoration:none;padding:12px 25px;border-radius:6px;font-weight:bold;display:inline-block;">
+                      Start Exploring Now
+                    </a>
+                  </div>
+
+                  <p style="font-size:13px;color:#666;">
+                    We're excited to be part of your investing journey.
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="background:#f1f5f9;padding:20px;text-align:center;font-size:12px;color:#555;">
+                  © ${new Date().getFullYear()} Stock Scope<br/>
+                  Empowering Everyone with Stock Market Access
+                </td>
+              </tr>
+
+            </table>
+
+          </td>
+        </tr>
+      </table>
+
+    </body>
+    </html>
+    `
+  };
+};
+
+export default transporter;
