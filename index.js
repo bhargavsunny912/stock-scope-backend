@@ -22,8 +22,9 @@ const PORT = process.env.PORT || 8000;
 
 app.use(cors({
   credentials:true,
-  origin:"*"
+  origin:"https://stock-scope-frontend-nine.vercel.app"
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
