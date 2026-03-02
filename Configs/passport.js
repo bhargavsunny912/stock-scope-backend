@@ -14,13 +14,28 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        let user = await User.findOne({ googleId: profile.id });
+        const email = profile.emails?.[0]?.value;
 
-        if (!user) {
+        if (!email) {
+          return done(new Error("No email from Google"), null);
+        }
+
+        // 1️⃣ Check if user already exists with this email
+        let user = await User.findOne({ email });
+
+        if (user) {
+          // 2️⃣ If exists but no googleId, attach it
+          if (!user.googleId) {
+            user.googleId = profile.id;
+            user.provider = "google";
+            await user.save();
+          }
+        } else {
+          // 3️⃣ If not exists → create new
           user = await User.create({
             googleId: profile.id,
-            username: profile.emails[0].value.split("@")[0],
-            email: profile.emails[0].value,
+            username: email.split("@")[0],
+            email,
             name: profile.displayName,
             provider: "google",
           });
@@ -28,6 +43,7 @@ passport.use(
 
         return done(null, user);
       } catch (err) {
+        console.error("GOOGLE STRATEGY ERROR:", err);
         return done(err, null);
       }
     }

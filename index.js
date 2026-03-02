@@ -169,6 +169,7 @@ setInterval(() => {
   });
 }, INDEX_POLL_INTERVAL);
 
+app.set("trust proxy", 1);
 app.use("/auth",authRoutes);
 app.use("/api",apiRoutes);
 
