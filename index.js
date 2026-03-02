@@ -10,6 +10,8 @@ import apiRoutes from "./Routes/apiRoutes.js";
 import authRoutes from "./Routes/authRoutes.js";
 import Connection from "./Configs/connection.js";
 import cookieParser from "cookie-parser";  
+import passport from "./Configs/passport.js";
+
 
 dotenv.config({quiet: true});
 
@@ -22,12 +24,13 @@ const PORT = process.env.PORT || 8000;
 
 app.use(cors({
   credentials:true,
-  origin:"https://stock-scope-frontend-nine.vercel.app"
+  origin:"https://stock-scope-frontend-nine.vercel.app/"
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
+app.use(passport.initialize());
 
 // Rate Limiting (Protection)
 app.use(limiter);

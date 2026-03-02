@@ -10,10 +10,19 @@ const userSchema=new mongoose.Schema({
         required:true,
         unique:true
     },
-    password:{
-        type:String,
-        required:true
+    password: {
+    type: String,
+    required: function () {
+        return !this.googleId;
     },
+    },
+    googleId: { 
+        type: String 
+    },
+    isGoogleUser: { 
+        type: Boolean, 
+        default: false 
+    }
 },{timestamps:true});
 
 const User=mongoose.model("User",userSchema);

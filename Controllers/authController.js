@@ -15,6 +15,10 @@ export const handleLoginController=async(req,res)=>{
         return res.status(401).json({msg:"You Dont Have Account , Please Create Account",status:"Failed"});
     }
 
+    if(!exists.password){
+        return res.status(400).json({msg: "This account was created using Google. Please login with Google",status:"Failed"});
+    }
+
     const verify=await bcrypt.compare(password,exists.password);
     
     if(!verify){
@@ -28,10 +32,10 @@ export const handleLoginController=async(req,res)=>{
         {expiresIn:"7d"}
     );
 
-    res.cookie("jwtToken",token,{
+    res.cookie("token",token,{
         httpOnly:true,
-        secure:false,
-        sameSite:"lax"
+        secure:true,
+        sameSite:"None"
     })
 
     return res.status(200).json({msg:"Login Successfull",status:"Success"});
@@ -61,7 +65,7 @@ export const handleSignupController=async(req,res)=>{
 };
 
 export const handleIsLoginController=async(req,res)=>{
-    const token=req.cookies.jwtToken;
+    const token=req.cookies.token;
     
     if(!token){
         return res.status(401).json({msg:"UnAuthorized Access,Login To Access",status:"UnAuthorized"});
@@ -80,10 +84,10 @@ export const handleIsLoginController=async(req,res)=>{
 }
 
 export const handleLogoutController=(req,res)=>{
-    res.clearCookie("jwtToken",{
+    res.clearCookie("token",{
         httpOnly:true,
-        sameSite:"lax",
-        secure:false
+        sameSite:"None",
+        secure:true
     });
     
     return res.status(200).json({msg:"User Logged Out Successfully",status:"Success"});
