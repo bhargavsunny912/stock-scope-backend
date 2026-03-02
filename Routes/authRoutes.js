@@ -27,20 +27,48 @@ router.get(
 );
 
 // Google Callback
+// router.get(
+//   "/google/callback",
+//   passport.authenticate("google", { session: false }),
+//   async (req, res) => {
+//     const token = generateJWT(req.user); // your existing JWT function
+
+//     res.cookie("token", token, {
+//       httpOnly: true,
+//       secure: true, // true in production (HTTPS)
+//       sameSite: "None",
+//       maxAge: 7 * 24 * 60 * 60 * 1000,
+//     });
+
+//     res.redirect(process.env.FRONTEND_URL);
+//   }
+// );
+
 router.get(
   "/google/callback",
   passport.authenticate("google", { session: false }),
   async (req, res) => {
-    const token = generateJWT(req.user); // your existing JWT function
+    try {
+      console.log("USER FROM GOOGLE:", req.user);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true, // true in production (HTTPS)
-      sameSite: "None",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+      if (!req.user) {
+        return res.status(400).json({ error: "User not found in callback" });
+      }
 
-    res.redirect(process.env.FRONTEND_URL);
+      const token = generateJWT(req.user);
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
+      res.redirect(process.env.FRONTEND_URL);
+    } catch (err) {
+      console.error("GOOGLE CALLBACK ERROR:", err);
+      res.status(500).json({ error: err.message });
+    }
   }
 );
 
