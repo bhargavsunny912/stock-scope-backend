@@ -26,50 +26,39 @@ router.get(
   })
 );
 
-// Google Callback
-// router.get(
-//   "/google/callback",
-//   passport.authenticate("google", { session: false }),
-//   async (req, res) => {
-//     const token = generateJWT(req.user); // your existing JWT function
-
-//     res.cookie("token", token, {
-//       httpOnly: true,
-//       secure: true, // true in production (HTTPS)
-//       sameSite: "None",
-//       maxAge: 7 * 24 * 60 * 60 * 1000,
-//     });
-
-//     res.redirect(process.env.FRONTEND_URL);
-//   }
-// );
-
 router.get(
   "/google/callback",
   passport.authenticate("google", { session: false }),
-  async (req, res) => {
-    try {
-      console.log("USER FROM GOOGLE:", req.user);
+  async (accessToken, refreshToken, profile, done) => {
+  try {
+    const email = profile.emails[0].value;
 
-      if (!req.user) {
-        return res.status(400).json({ error: "User not found in callback" });
-      }
+    let user = await User.findOne({
+      $or: [
+        { googleId: profile.id },
+        { email: email }
+      ]
+    });
 
-      const token = generateJWT(req.user);
-
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+    if (!user) {
+      user = await User.create({
+        googleId: profile.id,
+        username: email.split("@")[0],
+        email: email,
+        name: profile.displayName,
+        provider: "google",
       });
-
-      res.redirect(process.env.FRONTEND_URL);
-    } catch (err) {
-      console.error("GOOGLE CALLBACK ERROR:", err);
-      res.status(500).json({ error: err.message });
+    } else if (!user.googleId) {
+      user.googleId = profile.id;
+      user.provider = "google";
+      await user.save();
     }
+
+    return done(null, user);
+  } catch (err) {
+    return done(err, null);
   }
+}
 );
 
 export default router;

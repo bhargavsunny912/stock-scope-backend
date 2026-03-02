@@ -22,6 +22,7 @@ passport.use(
             username: profile.emails[0].value.split("@")[0],
             email: profile.emails[0].value,
             name: profile.displayName,
+            provider: "google",
           });
         }
 
