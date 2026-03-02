@@ -29,36 +29,23 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", { session: false }),
-  async (accessToken, refreshToken, profile, done) => {
-  try {
-    const email = profile.emails[0].value;
+  async (req, res) => {
+    try {
+      const token = generateJWT(req.user);
 
-    let user = await User.findOne({
-      $or: [
-        { googleId: profile.id },
-        { email: email }
-      ]
-    });
-
-    if (!user) {
-      user = await User.create({
-        googleId: profile.id,
-        username: email.split("@")[0],
-        email: email,
-        name: profile.displayName,
-        provider: "google",
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       });
-    } else if (!user.googleId) {
-      user.googleId = profile.id;
-      user.provider = "google";
-      await user.save();
-    }
 
-    return done(null, user);
-  } catch (err) {
-    return done(err, null);
+      res.redirect(process.env.FRONTEND_URL);
+    } catch (err) {
+      console.error("CALLBACK ERROR:", err);
+      res.status(500).json({ error: "Authentication failed" });
+    }
   }
-}
 );
 
 export default router;
