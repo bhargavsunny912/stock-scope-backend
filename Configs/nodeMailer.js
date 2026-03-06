@@ -81,7 +81,7 @@ Team Stock Scope`,
                   </p>
 
                   <div style="text-align:center;margin:30px 0;">
-                    <a href="http://localhost:5173"
+                    <a href="stock-scope-frontend-nine.vercel.app"
                        style="background:#2563eb;color:white;text-decoration:none;padding:12px 25px;border-radius:6px;font-weight:bold;display:inline-block;">
                       Start Exploring Now
                     </a>

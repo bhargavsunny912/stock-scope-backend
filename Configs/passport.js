@@ -29,14 +29,16 @@ passport.use(
             name: profile.displayName,
             provider: "google",
           });
-        } else if (!user.googleId) {
+        } 
+        else if (!user.googleId) {
           user.googleId = profile.id;
           user.provider = "google";
           await user.save();
         }
 
         return done(null, user);
-      } catch (err) {
+      } 
+      catch (err) {
         return done(err, null);
       }
     }
