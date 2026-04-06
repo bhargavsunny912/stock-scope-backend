@@ -11,6 +11,7 @@ import authRoutes from "./Routes/authRoutes.js";
 import Connection from "./Configs/connection.js";
 import cookieParser from "cookie-parser";  
 import passport from "./Configs/passport.js";
+import getStockData from "./Services/getStockData.js";
 
 
 dotenv.config({quiet: true});
