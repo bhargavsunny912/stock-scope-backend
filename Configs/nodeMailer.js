@@ -3,25 +3,12 @@ import dotenv from "dotenv";
 
 dotenv.config({quiet:true});
 
-// const transporter=nodemailer.createTransport({
-//     service:"gmail",
-//     auth:{
-//         user:"bhargavpenta@gmail.com",
-//         pass:`${process.env.NODE_MAILER_AUTH}`
-//     }
-// });
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: "bhargavpenta@gmail.com",
-    pass:`${process.env.NODE_MAILER_AUTH}`
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
+const transporter=nodemailer.createTransport({
+    service:"gmail",
+    auth:{
+        user:"bhargavpenta@gmail.com",
+        pass:`${process.env.NODE_MAILER_AUTH}`
+    }
 });
 
 export const mailOptions = (username, email) => {
