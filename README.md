@@ -33,7 +33,7 @@ The application is built with scalability, performance optimization, real-time c
 - Cookie Parser
 - bcrypt (Password hashing)
 - Socket.io
-- Nodemailer (Email service)
+- SendGrid (Email service)
 - Rate Limiting
 - Server-side Caching
 ---
@@ -72,7 +72,7 @@ The application is built with scalability, performance optimization, real-time c
 ---
 
 ## 📬 Email Integration
-- Nodemailer implemented for:
+- SendGrid implemented for:
   - Account-related emails
   - Notifications (extensible for future enhancements)
 

@@ -1,15 +1,9 @@
-import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import sgMail from "@sendgrid/mail";
 
 dotenv.config({quiet:true});
 
-const transporter=nodemailer.createTransport({
-    service:"gmail",
-    auth:{
-        user:"bhargavpenta@gmail.com",
-        pass:`${process.env.NODE_MAILER_AUTH}`
-    }
-});
+sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
 export const mailOptions = (username, email) => {
   return {
@@ -225,4 +219,3 @@ export const sendDailyReportOptions = (username, email, data) => {
   };
 };
 
-export default transporter;

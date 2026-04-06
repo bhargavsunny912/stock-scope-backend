@@ -2,7 +2,7 @@ import User from "../Models/userModel.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import transporter, { mailOptions } from "../Configs/nodeMailer.js";
+import sgMail,{ mailOptions } from "../Configs/sendGrid.js";
 
 dotenv.config({quiet:true});
 
@@ -54,12 +54,13 @@ export const handleSignupController=async(req,res)=>{
 
     const addUser=await User.create({email,password:hashPassword,username});
 
-    transporter.sendMail(mailOptions(username,email),(error,info)=>{
-        if(error){
-            console.log("Error Occured with Nodemailer",error);
-        }
-        if(info) console.log("Mail sent successfully",info);
-    });
+    try {
+        await sgMail.send(mailOptions(username, email));
+        console.log("Welcome email sent successfully");
+    } 
+    catch(error){
+        console.error(" Error sending welcome email",error.response?.body || error);
+    }
 
     return res.status(200).json({msg:"Signup Successfull",status:"Success"});
 };
