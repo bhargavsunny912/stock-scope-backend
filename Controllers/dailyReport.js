@@ -8,9 +8,12 @@ dotenv.config({quiet:true});
 const handleDailyReport=async(req,res)=>{
 
     try{
-        console.log("req headers",req.headers);
-        if(req.headers["x_cron_secret"]!==process.env.CRON_SECRET){
-            return res.status(401).json({message:"Unauthorized"});
+        const secret =
+        req.headers["x-cron-secret"] ||
+        req.headers["x_cron_secret"];
+
+        if (secret !== process.env.CRON_SECRET) {
+            return res.status(401).send("Unauthorized");
         }
 
         console.log("cron job triggered");
