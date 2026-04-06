@@ -219,3 +219,4 @@ export const sendDailyReportOptions = (username, email, data) => {
   };
 };
 
+export default sgMail;
